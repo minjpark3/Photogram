@@ -100,6 +100,29 @@ function getSubscribeModalItem(u) {
 	return item;
 }
 
+// (3) 구독자 정보 모달에서 구독하기, 구독취소
+function toggleSubscribeModal(userId, obj) {
+
+	if ($(obj).text() === "구독취소") {
+		$.ajax({
+			type: "DELETE",
+			url: "/subscribe/" + userId,
+			dataType: "json",
+		}).done((res) => {
+			$(obj).text("구독하기");
+			$(obj).toggleClass("blue");
+		});
+	} else {
+		$.ajax({
+			type: "POST",
+			url: "/subscribe/" + userId,
+			dataType: "json",
+		}).done((res) => {
+			$(obj).text("구독취소");
+			$(obj).toggleClass("blue");
+		});
+	}
+}
 
 
 // (3) 유저 프로파일 사진 변경 (완)

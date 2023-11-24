@@ -1,7 +1,8 @@
-package com.cos.photogramstart.domain.subscribe;
+package com.cos.photogramstart.domain.likes;
 
+
+import com.cos.photogramstart.domain.image.Image;
 import com.cos.photogramstart.domain.user.User;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,23 +19,22 @@ import java.time.LocalDateTime;
 @Table(
         uniqueConstraints = {
                 @UniqueConstraint(
-                        name = "subscribe_uk",
-                        columnNames = {"fromUserId","toUserId"}
+                        name = "likes_uk",
+                        columnNames = {"imageId","userId"}
                 )
         }
-)
-public class Subscribe {
+)           //N
+public class Likes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @JsonIgnoreProperties({"images"})
-    @JoinColumn(name = "fromUserId")
     @ManyToOne
-    private User fromUser;
-    @JsonIgnoreProperties({"images"})
-    @JoinColumn(name = "toUserId")
+    @JoinColumn(name = "imageId")
+    private Image image; //1 ->하나의 이미지는 여러번 가능  1:N
+
+    @JoinColumn(name = "userId")
     @ManyToOne
-    private User toUser;
+    private User user;
 
     private LocalDateTime createDate;
 
