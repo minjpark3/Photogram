@@ -5,6 +5,7 @@ import com.cos.photogramstart.handler.ex.CustomApiException;
 import com.cos.photogramstart.web.dto.subscribe.SubscribeDto;
 import lombok.RequiredArgsConstructor;
 import org.qlrm.mapper.JpaResultMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,22 +17,24 @@ import java.util.List;
 @Service
 public class SubscribeService {
 
+
     private final SubscribeRepository subscribeRepository;
     //쿼리를 직접 사용하기 위해서 사용
     private final EntityManager em; //레파지토리는 EntityManager를 구현해서 만들어져있는 구현체
 
 
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true)//셀렉트만할거라
     public List<SubscribeDto>구독리스트(int principalId,int pageUserId){
     //쿼리 준비
         StringBuffer sb = new StringBuffer();
-        sb.append("select u.id userId, u.username, u.profileImageUrl,  ");//,뒤에 꼭 한칸 띄우기 오류생길 수 있음
-        sb.append("if( (select true from subscribe where fromUserId = ? and toUserId = u.id), true, false) subscribeState, ");  // principalDetails.user.id
-        sb.append("if(u.id = ?, true, false) equalState "); // principalDetails.user.id
-        sb.append("from subscribe f inner join user u on u.id = f.toUserId ");
-        sb.append("where f.fromUserId = ? "); // pageUserId
-    //쿼리 완성
+        sb.append("select user.id, user.username, user.profileImageUrl, ");//,뒤에 꼭 한칸 띄우기 오류생길 수 있음
+        sb.append("if((select 1 from subscribe where fromUserId = ? AND toUserId = user.id),1,0) subscribeState, ");  // principalDetails.user.id
+        sb.append("if((?= user.id),1,0) equalUserState "); // principalDetails.user.id
+        sb.append("from user inner join subscribe  ");
+        sb.append("on user.id = subscribe.toUserId " );
+        sb.append("where subscribe.fromUserId =?"); // pageUserId
+        //쿼리 완성
         Query query = em.createNativeQuery(sb.toString())
                 .setParameter(1, principalId)
                 .setParameter(2, principalId)

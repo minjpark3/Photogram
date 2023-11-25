@@ -47,11 +47,11 @@ public class ImageService {
         Image imageEntity = imageRepository.save(image);
         //System.out.println(imageEntity.toString());
     }
-//    @Transactional(readOnly = true)//영속성 컨텍스트변경 감지해서 ,더티체킹, flush반영
-//    public Page<Image> 이미지스토리(int principalId, Pageable pageable){
-//        Page<Image>images = imageRepository.mStroy(principalId, pageable);
-//            return images;
-//}
+    @Transactional(readOnly = true)//영속성 컨텍스트변경 감지해서 ,더티체킹, flush반영
+    public Page<Image> 이미지스토리(int principalId, Pageable pageable){
+        Page<Image>images = imageRepository.mStroy(principalId, pageable);
+            return images;
+}
 
 
 }

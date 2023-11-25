@@ -19,18 +19,18 @@ public class UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Transactional(readOnly = true)
-    public UserProfileDto 회원프로필(int userId,int principalId){
+    public UserProfileDto 회원프로필(int pageUserId, int principalId){
         UserProfileDto dto =new UserProfileDto();
     //SELECT *FROM image WHERE userId=:userId;
-        User userEntity = userRepository.findById(userId).orElseThrow(()->{
+        User userEntity = userRepository.findById(pageUserId).orElseThrow(()->{
             throw new CustomException("해당 프로필 페이지는 없는 페이지입니다.");
         });
         //userEntity.getImages().get(0);
         dto.setUser(userEntity);
-        dto.setPageOwnerState(userId==principalId);
+        dto.setPageOwnerState(pageUserId==principalId);
         dto.setImageCount(userEntity.getImages().size());
-        int subscribeState =subscribeRepository.mSubscribeState(principalId,userId);
-        int subscribeCount = subscribeRepository.mSubscribeCount(userId);
+        int subscribeState =subscribeRepository.mSubscribeState(principalId,pageUserId);
+        int subscribeCount = subscribeRepository.mSubscribeCount(pageUserId);
 
         dto.setSubscribeState(subscribeState==1);
         dto.setSubscribeCount(subscribeCount);

@@ -31,15 +31,11 @@ public class User {
     private String email;
     @Column(nullable = false)
     private String name;
-    @Column(nullable = true)
     private String website;
-    @Column(nullable = true)
     private String bio;
-    @Column(nullable = true)
     private String phone;
-    @Column(nullable = true)
     private String gender;
-    @Column(nullable = true)
+
     private String profileImageUrl;
     private String role; //권한
 

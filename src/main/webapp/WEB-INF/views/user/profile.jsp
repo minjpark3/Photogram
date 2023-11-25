@@ -76,7 +76,7 @@
             <div class="tab-1-content-inner">
 
                 <!--아이템들-->
-			    <c:forEach var="image" items="${dto.user.images}"><!--EL표현식에서 변수명을 적으면get함수가 자동호출된다-->
+			    <c:forEach var="image" items="${dto.user.images}"><!--EL표현식에서 변수명을 적으면 get함수가 자동호출된다-->
                     <div class="img-box">
                         <a href=""> <img src="/upload/${image.postImageUrl}"/>
                         </a>
@@ -124,7 +124,17 @@
         </div>
 
         <div class="subscribe-list" id="subscribeModalList">
-
+            <!--<div class="subscribe__item" id="subscribeModalItem-1">
+				<div class="subscribe__img">
+					<img src="#" onerror="this.src='/images/person.jpeg'"/>
+				</div>
+				<div class="subscribe__text">
+					<h2>love</h2>
+				</div>
+				<div class="subscribe__btn">
+					<button class="cta blue" onclick="toggleSubscribeModal(this)">구독취소</button>
+				</div>
+			</div>-->
         </div>
     </div>
 

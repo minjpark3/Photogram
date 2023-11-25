@@ -21,12 +21,12 @@ public class ImageApiController {
     private final ImageService imageService;
     private final LikesService likesService;
 
-//    @GetMapping("/api/image")
-//    public ResponseEntity<?>imageStroy(@AuthenticationPrincipal PrincipalDetails principalDetails,
-//                                       @PageableDefault(size=3)Pageable pageable){
-//        Page<Image> images = imageService.이미지스토리(principalDetails.getUser().getId(),pageable);
-//        return new ResponseEntity<>(new CMRespDto<>(1,"성공",images), HttpStatus.OK);
-//    }
+    @GetMapping("/api/image")
+    public ResponseEntity<?>imageStroy(@AuthenticationPrincipal PrincipalDetails principalDetails,
+                                       @PageableDefault(size=3)Pageable pageable){
+        Page<Image> images = imageService.이미지스토리(principalDetails.getUser().getId(),pageable);
+        return new ResponseEntity<>(new CMRespDto<>(1,"성공",images), HttpStatus.OK);
+    }
     @PostMapping("/api/image/{imageId}/likes")
     public ResponseEntity<?>likes(@PathVariable int imageId, @AuthenticationPrincipal PrincipalDetails principalDetails){
         likesService.좋아요(imageId,principalDetails.getUser().getId());

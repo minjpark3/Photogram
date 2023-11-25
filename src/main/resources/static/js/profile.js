@@ -40,73 +40,44 @@ function toggleSubscribe(toUserId,obj) {
 }
 
 // (2) 구독자 정보  모달 보기
-// function subscribeInfoModalOpen(userId) {
-// 	$(".modal-subscribe").css("display", "flex");
-//
-// 		$.ajax({
-// 				url:`/api/user/${userId}/subscribe`,
-// 				dataType:"json"
-// 			}).done(res=>{
-// 				console.log(res.data);
-// 				res.data.forEach(()=>{
-// 					let item = getSubscribeModalItem(u);
-// 					$("#subscribeModalList").append(item);
-// 				});
-// 			}).fail(error=>{
-// 				console.log("구독하기실패",error);
-// 			});
-// }
-
-function subscribeInfoModalOpen() {
+function subscribeInfoModalOpen(pageUserId) {
 	$(".modal-subscribe").css("display", "flex");
-
-	let userId = $("#userId").val();
-
 	$.ajax({
-		url: `/user/${userId}/subscribe`,
-	})
-		.done((res) => {
-			$("#subscribeModalList").empty();
-
-			res.data.forEach((u) => {
-				let item = getSubscribeModalItem(u);
+			url:`/api/user/${pageUserId}/subscribe`,
+			dataType:"json"
+		}).done(res=>{
+			console.log(res.data);
+			res.data.forEach((u)=>{
+				let item= getSubscribeModalItem(u);
 				$("#subscribeModalList").append(item);
 			});
-		})
-		.fail((error) => {
-			console.log("오류 : " + error.text);
+		}).fail(error=>{
+			console.log("구독정보 불러오기 오류",error);
 		});
 }
-
 function getSubscribeModalItem(u) {
-	let item = `<div class="subscribe__item" id="subscribeModalItem-${u.userId}">`;
-	item += `<div class="subscribe__img">`;
-	item += `<img src="/upload/${u.profileImageUrl}" alt=""  onerror="this.src='/images/person.jpeg'"/>`;
-	item += `</div>`;
-	item += `<div class="subscribe__text">`;
-	item += `<h2>${u.username}</h2>`;
-	item += `</div>`;
-	item += `<div class="subscribe__btn">`;
-	if (!u.equalState) {
-		if (u.subscribeState) {
-			item += `<button class="cta blue" onclick="toggleSubscribe(${u.userId}, this)">구독취소</button>`;
-		} else {
-			item += `<button class="cta" onclick="toggleSubscribe(${u.userId}, this)">구독하기</button>`;
-		}
-	}
-	item += `</div>`;
-	item += `</div>`;
-
+	let item = `<div class="subscribe__item" id="subscribeModalItem-1">
+    <div class="subscribe__img">
+        <img src="#" onerror="this.src='/images/person.jpeg'"/>
+    </div>
+    <div class="subscribe__text">
+        <h2>${u.username}</h2>
+    </div>
+    <div class="subscribe__btn">
+        <button class="cta blue" onclick="toggleSubscribeModal(this)">구독취소</button>
+    </div>
+</div>`;
 	return item;
 }
 
+
 // (3) 구독자 정보 모달에서 구독하기, 구독취소
-function toggleSubscribeModal(userId, obj) {
+function toggleSubscribeModal(pageUserId, obj) {
 
 	if ($(obj).text() === "구독취소") {
 		$.ajax({
 			type: "DELETE",
-			url: "/subscribe/" + userId,
+			url: "/subscribe/" + pageUserId,
 			dataType: "json",
 		}).done((res) => {
 			$(obj).text("구독하기");
@@ -115,7 +86,7 @@ function toggleSubscribeModal(userId, obj) {
 	} else {
 		$.ajax({
 			type: "POST",
-			url: "/subscribe/" + userId,
+			url: "/subscribe/" + pageUserId,
 			dataType: "json",
 		}).done((res) => {
 			$(obj).text("구독취소");
