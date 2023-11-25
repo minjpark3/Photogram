@@ -17,7 +17,7 @@ function storyLoad(){
 	}).done(res=>{
 		console.log(res);
 		res.data.content.forEach((image)=>{
-			let storyItem = getStoryItem(image);
+			let storyItem=getStoryItem(image);
 			$("#storyList").append(storyItem);
 		});
 	}).fail(error=>{
@@ -27,55 +27,53 @@ function storyLoad(){
 storyLoad();
 
 function getStoryItem(image) {
- let item =`
-<div class="story-list__item">
+ let item =`<div class="story-list__item">
 	<div class="sl__item__header">
 		<div>
-			<img class="profile-image" src="#"
-				onerror="this.src='/images/person.jpeg'" />
+			<img class="profile-image" src="/upload/${image.user.profileImageUrl}"
+				 onerror="this.src='/images/person.jpeg'" />
 		</div>
-		<div>TherePrograming</div>
+		<div>${image.user.username}</div>
 	</div>
 
 	<div class="sl__item__img">
-		<img src="/images/home.jpg" />
+		<img src="/upload/${image.postImageUrl}" />
 	</div>
 
 	<div class="sl__item__contents">
 		<div class="sl__item__contents__icon">
 
 			<button>
-				<i class="fas fa-heart active" id="storyLikeIcon-1" onclick="toggleLike()"></i>
+				<i class="fas fa-heart active" id="storyLikeIcon-${image.id}" onclick="toggleLike(${image.id})"></i>
 			</button>
 		</div>
 
 		<span class="like"><b id="storyLikeCount-1">3 </b>likes</span>
 
 		<div class="sl__item__contents__content">
-			<p>등산하는 것이 너무 재밌네요</p>
+			<p>${image.caption}</p>
 		</div>
 
 		<div id="storyCommentList-1">
 
 			<div class="sl__item__contents__comment" id="storyCommentItem-1"">
-				<p>
-					<b>Lovely :</b> 부럽습니다.
-				</p>
+			<p>
+				<b>Lovely :</b> 부럽습니다.
+			</p>
 
-				<button>
-					<i class="fas fa-times"></i>
-				</button>
+			<button>
+				<i class="fas fa-times"></i>
+			</button>
 
-			</div>
-
-		</div>
-
-		<div class="sl__item__input">
-			<input type="text" placeholder="댓글 달기..." id="storyCommentInput-1" />
-			<button type="button" onClick="addComment()">게시</button>
 		</div>
 
 	</div>
+
+	<div class="sl__item__input">
+		<input type="text" placeholder="댓글 달기..." id="storyCommentInput-1" />
+		<button type="button" onClick="addComment()">게시</button>
+	</div>
+
 </div>`
 	return item;
 }
@@ -87,7 +85,7 @@ $(window).scroll(() => {
 	// console.log("문서의 높이",$(document).height());
 	// console.log("윈도우높이",$(window).height());
 	//문서의높이-윈도우 높이 = 스크롤탑이랑 일치 한다.
-	let checkNum=$(window).scroll()-($(document).height()-$(window).height());
+	let checkNum=$(window).scrollTop()-($(document).height()-$(window).height());
 	console.log(checkNum);
 	if (checkNum<1 && checkNum >-1){
 		page++;

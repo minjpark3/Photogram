@@ -40,10 +40,10 @@ function toggleSubscribe(toUserId,obj) {
 }
 
 // (2) 구독자 정보  모달 보기
-function subscribeInfoModalOpen(pageUserId) {
+function subscribeInfoModalOpen(userId) {
 	$(".modal-subscribe").css("display", "flex");
 	$.ajax({
-			url:`/api/user/${pageUserId}/subscribe`,
+			url:`/api/user/${userId}/subscribe`,
 			dataType:"json"
 		}).done(res=>{
 			console.log(res.data);
@@ -56,45 +56,50 @@ function subscribeInfoModalOpen(pageUserId) {
 		});
 }
 function getSubscribeModalItem(u) {
-	let item = `<div class="subscribe__item" id="subscribeModalItem-1">
+	let item = `<div class="subscribe__item" id="subscribeModalItem-${u.id}">
     <div class="subscribe__img">
-        <img src="#" onerror="this.src='/images/person.jpeg'"/>
+        <img src="/upload/${u.profileImageUrl}" onerror="this.src='/images/person.jpeg'"/>
     </div>
     <div class="subscribe__text">
         <h2>${u.username}</h2>
     </div>
-    <div class="subscribe__btn">
-        <button class="cta blue" onclick="toggleSubscribeModal(this)">구독취소</button>
-    </div>
+    <div class="subscribe__btn">`;
+
+	if(!u.equalUserState){//동일 유저가 아닐때 버튼이 만들어져야함
+		if(u.subscribeState){//구독한 상태
+			item += `<button class="cta blue" onClick="toggleSubscribe(${u.id},this)">구독취소</button>`
+		}else{//구독안한상태
+			item +=`<button class="cta " onClick="toggleSubscribe(${u.id},this)">구독하기</button>`
+		}
+	}
+	item +=`
+	</div>
 </div>`;
 	return item;
 }
 
 
 // (3) 구독자 정보 모달에서 구독하기, 구독취소
-function toggleSubscribeModal(pageUserId, obj) {
-
-	if ($(obj).text() === "구독취소") {
-		$.ajax({
-			type: "DELETE",
-			url: "/subscribe/" + pageUserId,
-			dataType: "json",
-		}).done((res) => {
-			$(obj).text("구독하기");
-			$(obj).toggleClass("blue");
-		});
-	} else {
-		$.ajax({
-			type: "POST",
-			url: "/subscribe/" + pageUserId,
-			dataType: "json",
-		}).done((res) => {
-			$(obj).text("구독취소");
-			$(obj).toggleClass("blue");
-		});
-	}
-}
-
+//function toggleSubscribeModal(pageUserId, obj) {
+	//if ($(obj).text() === "구독취소") {
+	//	$.ajax({
+	//		type: "DELETE",
+	//		url: "/subscribe/" + pageUserId,
+	//		dataType: "json",
+	//	}).done((res) => {
+	//		$(obj).text("구독하기");
+	//		$(obj).toggleClass("blue");
+	//	});
+	//} else {
+	//	$.ajax({
+	//		type: "POST",
+	//		url: "/subscribe/" + pageUserId,
+	//		dataType: "json",
+	//	}).done((res) => {
+	//		$(obj).text("구독취소");
+	//		$(obj).toggleClass("blue");
+	//	});
+	//} }
 
 // (3) 유저 프로파일 사진 변경 (완)
 function profileImageUpload() {

@@ -8,6 +8,7 @@ import com.cos.photogramstart.web.dto.CMRespDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,8 @@ public class ImageApiController {
 
     @GetMapping("/api/image")
     public ResponseEntity<?>imageStroy(@AuthenticationPrincipal PrincipalDetails principalDetails,
-                                       @PageableDefault(size=3)Pageable pageable){
+                                      // @PageableDefault(size=3)Pageable pageable){
+                                       @PageableDefault(size=3,sort = "id",direction = Sort.Direction.DESC)Pageable pageable){
         Page<Image> images = imageService.이미지스토리(principalDetails.getUser().getId(),pageable);
         return new ResponseEntity<>(new CMRespDto<>(1,"성공",images), HttpStatus.OK);
     }
