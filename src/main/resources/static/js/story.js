@@ -6,6 +6,8 @@
 	(4) 댓글쓰기
 	(5) 댓글삭제
  */
+//(0)현재 로그인한 사용자 아이디
+let pricipalId = $("#principalId").val();
 
 // (1) 스토리 로드하기
 let page=0;
@@ -81,12 +83,13 @@ function getStoryItem(image) {
 			item +=`<div class="sl__item__contents__comment" id="storyCommentItem-${comment.id}">
 			<p>
 				<b>${comment.user.username}:</b> ${comment.content}
-			</p>
-
-			<button>
-				<i class="fas fa-times"></i>
-			</button>
-
+			</p>`;
+			if(pricipalId ==comment.user.id){
+				item +=`<button onclick="deleteComment(${comment.id})">
+						<i class="fas fa-times"></i>
+						</button>`
+			}
+		item +=`
 		</div>`;
 	});
 
@@ -173,19 +176,35 @@ function addComment(imageId) {
 			      <b>${comment.user.username} :</b>
 			      ${comment.content}
 			    </p>
-			    <button><i class="fas fa-times"></i></button>
+			    <button onclick="deleteComment(${comment.id})"><i class="fas fa-times"></i></button>
 			  </div>
 	`;
 		commentList.prepend(content); //append 는 뒤에다 붙이고  prepend 는 앞쪽에 ,,
 
 	}).fail(error=>{
-		console.log("오류",error)
+		console.log("오류",error.responseJSON.data.content);
+		alert(error.responseJSON.data.content);
 	});
 	commentInput.val("");// 인풋필드 깨끗하게 비워줌
 }
 
 // (5) 댓글 삭제
-function deleteComment() {
+function deleteComment(commentId) {
+	// $.ajax({
+	// 	type:"delete",
+	// 	url:`/api/comment/${commentId}`,
+	// 	dateType:"json"
+	// }).done(res=>{
+	// 	console.log("성공",res);
+	// 	$(`#storyCommetItem-${commentId}`).remove();
+	// });
+	$.ajax({
+		type: "delete",
+		url: "/api/comment/" + commentId,
+		dataType: "json"
+	}).done(res => {
+		$("#storyCommentItem-" + commentId).remove();
+	});
 
 }
 
