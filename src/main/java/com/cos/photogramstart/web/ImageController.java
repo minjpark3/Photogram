@@ -1,14 +1,18 @@
 package com.cos.photogramstart.web;
 
 import com.cos.photogramstart.config.auth.PrincipalDetails;
+import com.cos.photogramstart.domain.image.Image;
 import com.cos.photogramstart.handler.ex.CustomVaildationException;
 import com.cos.photogramstart.service.ImageService;
 import com.cos.photogramstart.web.dto.Image.ImageUploadDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import java.util.List;
 
 
 @RequiredArgsConstructor
@@ -21,11 +25,15 @@ public class ImageController {
         return "image/story";
     }
 
-    @GetMapping({"/image/popular"})
-    public String popular(){
-        return "image/popular";
+    //api구현한다면 - 이유 - (브라우저에서 요청하는게 아니라 , 안드로이드 , ios요청 )
+    @GetMapping("/image/popular")
+    public String popular(Model model){
+        //api는 데이터를 리턴하는 서버
+        List<Image> images= imageService.인기사진();
+        model.addAttribute("images",images);
+        //model.addAttribute("images",images);
+        return "/image/popular";
     }
-
     @GetMapping({"/image/upload"})
     public String upload(){
         return "image/upload";

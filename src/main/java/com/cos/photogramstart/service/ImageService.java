@@ -10,12 +10,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.cos.photogramstart.domain.image.Image;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.util.List;
 import java.awt.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
+
 
 @RequiredArgsConstructor
 @Service
@@ -23,6 +24,10 @@ public class ImageService {
 
     private final ImageRepository imageRepository;
 
+    @Transactional(readOnly = true)
+    public List<Image>인기사진(){
+        return imageRepository.mPopular();
+    }
 
     @Transactional(readOnly = true)//영속성 컨텍스트변경 감지해서 ,더티체킹, flush반영
     public Page<Image> 이미지스토리(int principalId, Pageable pageable){
